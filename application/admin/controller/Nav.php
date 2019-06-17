@@ -6,8 +6,6 @@
  * Time: 17:33
 **/
 namespace app\admin\controller;
-use app\admin\traits\Result;
-use think\facade\Request;
 
 class Nav  extends Common{
 
@@ -34,6 +32,17 @@ class Nav  extends Common{
             $this->error('修改失败', null);
         }
 
+
+    }
+
+//    增加导航菜单
+
+    public function addnav(){
+        if(request()->isajax()){
+
+        }else{
+            $this->fetch();
+        }
 
     }
 }

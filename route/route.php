@@ -53,9 +53,14 @@ Route::group('admin', [
     'config'=>'admin/System/config',                                         //系统配置
     'siteConfig'=>'admin/System/siteConfig',                                 //站点配置
     //上传管理
+
     'upload'=>'admin/Upload/index',                                    //上传图片
+//    导航管理
     'navlist'=>'admin/Nav/index',
-    'navStatusEdit'=>'admin/Nav/navStatusEdit'
+
+    'navStatusEdit'=>'admin/Nav/navStatusEdit',
+    'navedit'=>'admin/Nav/navedit'
+
 ])->middleware(app\admin\middleware\CheckAuth::class)->ext('html');          //使用中间件验证
 
 
