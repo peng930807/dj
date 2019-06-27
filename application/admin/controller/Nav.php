@@ -39,37 +39,53 @@ class Nav  extends Common{
 
     public function navedit(){
         if(request()->isajax()){
-            $data=request()->post();
-
-            $res=NavModel::create($data,['name','pid','status','type','sort','url']);
-            if($res){
-                $msg='保存成功';
-                $code=1;
+//            树形数据接口
+            if(request()->isget()){
+                $res=NavModel::select()->toArray();
+                return $this->tree($res);
             }else{
-                $msg='保存失败';
-                $code=0;
+                $data=request()->post();
+//                修改
+                if($data['id']){
+
+                }else{
+                    新增
+                    $res=NavModel::create($data,['name','pid','status','type','sort','url']);
+                }
+
+                if($res){
+                    $msg='保存成功';
+                    $code=1;
+                }else{
+                    $msg='保存失败';
+                    $code=0;
+                }
+                return show([],$code,$msg);
             }
-            return show([],$code,$msg);
+
         }else{
 
-            $navlist=NavModel::where('status',1)->select();
-
-            $this->assign('navlist',$navlist);
+            $id=request()->param('id');
+            if($id){
+                $this->assign('id',$id);
+            }
             return $this->fetch();
         }
 
     }
-    public function ceshi(){
-        $res=NavModel::select();
-        foreach($res as $v){
-            $arr['id']=$v['id'];
-            $arr['name']=$v['name'];
-            $arr['open']=true;
-            $arr['checked']=false;
-            if($v['pid']!=0){}
+    public function tree($list){
 
+        foreach ($list as  &$value) {
+            # code...
+            $value=$value;
+            $value['open']=false;
+            $value['checked']=false;
         }
-        return show($res,1,'加载成功');
+        $arr=array('id'=>0,'name'=>'根节点','pid'=>0,'open'=>true,'checked'=>false);
+        array_unshift($list,$arr);
+        $res=list_to_tree($list,'id','pid','children',0);
+
+        return json($res);
     }
     public function delete(){
         $id=request()->param('id');
