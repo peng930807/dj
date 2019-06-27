@@ -6,7 +6,7 @@
  * Time: 17:33
 **/
 namespace app\admin\controller;
-
+use app\admin\model\Nav as NavModel;
 class Nav  extends Common{
 
     public function  index(){
@@ -37,11 +37,47 @@ class Nav  extends Common{
 
 //    增加导航菜单
 
-    public function addnav(){
+    public function navedit(){
         if(request()->isajax()){
+            $data=request()->post();
+
+            $res=NavModel::create($data,['name','pid','status','type','sort','url']);
+            if($res){
+                $msg='保存成功';
+                $code=1;
+            }else{
+                $msg='保存失败';
+                $code=0;
+            }
+            return show([],$code,$msg);
+        }else{
+
+            $navlist=NavModel::where('status',1)->select();
+
+            $this->assign('navlist',$navlist);
+            return $this->fetch();
+        }
+
+    }
+    public function ceshi(){
+        $res=NavModel::select();
+        foreach($res as $v){
+            $arr['id']=$v['id'];
+            $arr['name']=$v['name'];
+            $arr['open']=true;
+            $arr['checked']=false;
+            if($v['pid']!=0){}
+
+        }
+        return show($res,1,'加载成功');
+    }
+    public function delete(){
+        $id=request()->param('id');
+        $res=NavModel::destroy($id);
+        if($res){
 
         }else{
-            $this->fetch();
+
         }
 
     }
